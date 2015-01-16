@@ -1,27 +1,49 @@
 package es.local.experts;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class LocalExperts extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
+public class LocalExperts extends Game {
+	public SpriteBatch _batch;
+	public Viewport _viewport;
+	public OrthographicCamera _camera;
 	
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		_batch = new SpriteBatch();
+		_camera = new OrthographicCamera();
+		_viewport = new FitViewport(Utils.APP_WIDTH, Utils.APP_HEIGHT, _camera);
+		_viewport.update(Utils.APP_WIDTH, Utils.APP_HEIGHT, true);
+		
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Gidole-Regular.ttf"));
+		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+		parameter.size = 100;
+		Utils.FONT = generator.generateFont(parameter);
+		generator.dispose();
+		
+		
+		setScreen(new MainScreen(this));
+
 	}
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
+		super.render();
 	}
+	
+	@Override
+	public void dispose () {
+		Screen screen = getScreen();
+		if (screen != null) screen.hide();
+		
+		if (Utils.FONT != null) Utils.FONT.dispose();
+	}
+	
 }
