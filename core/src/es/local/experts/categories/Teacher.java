@@ -1,10 +1,17 @@
-package es.local.experts;
+package es.local.experts.categories;
 
-public class Fisiotherapy extends Category {
+import com.badlogic.gdx.utils.ObjectMap;
 
-	Fisiotherapy() {
+import es.local.experts.categories.Category.OptionType;
+
+public class Teacher extends Category {
+	
+	public Teacher() {
 		super();
-		_name = "Fisiotherapy";
+		
+		_fields = new ObjectMap<String, OptionType>();
+		
+		_name = "Teacher";
 		
 		loadField("sessionTime", OptionType.value);
 		loadField("sessionPrice", OptionType.value);

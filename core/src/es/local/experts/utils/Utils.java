@@ -1,4 +1,4 @@
-package es.local.experts;
+package es.local.experts.utils;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 

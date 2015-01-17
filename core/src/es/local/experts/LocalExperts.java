@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import es.local.experts.utils.Utils;
+
 public class LocalExperts extends Game {
 	public SpriteBatch _batch;
 	public Viewport _viewport;

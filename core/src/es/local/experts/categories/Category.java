@@ -1,12 +1,12 @@
-package es.local.experts;
+package es.local.experts.categories;
 
-import java.util.HashMap;
+import com.badlogic.gdx.utils.ObjectMap;
 
 public abstract class Category {
 
 	static public enum OptionType { checkBox, range, value };
 	
-	protected HashMap<String, OptionType> _fields;
+	protected ObjectMap<String, OptionType> _fields;
 	protected String _name;
 	
 	public abstract void loadField(String field, OptionType option);
