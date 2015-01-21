@@ -1,14 +1,48 @@
 package es.local.experts.categories;
 
-import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Array;
 
-public abstract class Category {
+public class Category {
 
-	static public enum OptionType { checkBox, range, value };
+	public static enum OptionType { checkBox, range, value };
 	
-	protected ObjectMap<String, OptionType> _fields;
-	protected String _name;
+	public static class Field {
+		public String _fieldName;
+		public OptionType _type;
+		public Object _value;
+		
+		public Field(String fieldName, OptionType type, Object value) {
+			_fieldName = fieldName;
+			_type = type;
+			_value = value;
+		}
+	};
 	
-	public abstract void loadField(String field, OptionType option);
+	private Array<Field> _fields;
+	private String _name;
+	
+	public Category(String categoryName) {
+		_name = categoryName;
+		_fields = new Array<Field>();
+	}
+	
+	public String getName() {
+		return _name;
+	}
+	
+	public Array<Field> getFields() {
+		return _fields;
+	}
+	
+	public void loadField (String fieldName, OptionType type, Object value) {
+		_fields.add( new Field(fieldName, type, value) );	
+	}
+	
+	public void changeField (String fieldName, Object value) {
+		for(Field field : _fields) {
+			if(field._fieldName.compareTo(fieldName) == 0)
+				field._value = value;
+		}
+	}
 	
 }

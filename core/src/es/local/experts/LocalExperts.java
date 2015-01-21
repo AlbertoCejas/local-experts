@@ -28,6 +28,8 @@ public class LocalExperts extends Game {
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		parameter.size = 100;
 		Utils.FONT = generator.generateFont(parameter);
+		parameter.size = 75;
+		Utils.SMALLFONT = generator.generateFont(parameter);
 		generator.dispose();
 		
 		

@@ -8,5 +8,6 @@ public final class Utils {
 	static public final int APP_HEIGHT = 1920;
 	
 	static public BitmapFont FONT;
+	static public BitmapFont SMALLFONT;
 
 }
