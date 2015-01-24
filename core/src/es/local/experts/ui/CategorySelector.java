@@ -114,12 +114,6 @@ public class CategorySelector extends Table implements Disposable {
 		_backgroundButton = new Button(bbs);
 		_backgroundButton.setSize(width, minHeight);
 
-		// -- Panel definition ---------------------------
-		Button.ButtonStyle pbs = new Button.ButtonStyle();
-		pbs.up = css._panelBackground;
-		_expandablePanel = new Button(pbs);
-		_expandablePanel.setHeight(panelSize);
-
 		// -- Text slider --------------------------------
 		_textSlider = new Table();
 		_textSlider.setHeight(minHeight);

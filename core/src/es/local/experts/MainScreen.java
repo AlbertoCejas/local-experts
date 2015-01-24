@@ -31,6 +31,8 @@ public class MainScreen extends ScreenAdapter {
 	Texture _sliderLeftArrow, _sliderRightArrow, _sliderBackground, _panelBackground;
 	Texture _orderBackground, _orderItemBackground, _listViewBackground;
 	
+	Texture _avatar;
+	
 	public MainScreen (LocalExperts game) {
 		_game = game;
 		
@@ -105,6 +107,14 @@ public class MainScreen extends ScreenAdapter {
 		
 		_categorySelector.setBackgroundTable(_listView);
 		
+		
+		_avatar = new Texture("avatar.png");
+		
+		Person p1 = new Person(0, _avatar, "Alberto Cejas Sánchez", 3);
+		Person p2 = new Person(1, _avatar, "Alberto Cejas Sánchez", 3);
+		_listView.addPerson(p1);
+		_listView.addPerson(p2);
+		
 		// Build the stage ---------------------------
 		
 		_stage.addActor(_listView);
@@ -153,6 +163,7 @@ public class MainScreen extends ScreenAdapter {
 		_panelBackground.dispose();
 		_orderItemBackground.dispose();
 		_listViewBackground.dispose();
+		_avatar.dispose();
 		
 	}
 
