@@ -75,34 +75,28 @@ public class ListView extends Table implements Disposable {
 	
 	public void addPerson(Person p) {
 		Table personTable = new Table();
-		//personTable.setDebug(true);
+		personTable.setDebug(true);
 		personTable.setSize(getWidth(), 200f);
-
 		
 		Label.LabelStyle ls = new Label.LabelStyle();
 		ls.font = _style._font;
 		ls.fontColor = Color.BLACK;
 		
 		Table infoTable = new Table();
-		infoTable.setSize(getWidth() - 150f, 200f);
-		infoTable.row().expandX();
+		infoTable.row();
 		infoTable.add(new Label(p.getName(), ls)).colspan(2);
-		infoTable.row().expandX();
-		infoTable.add(new Label("10e/hora", ls));
-		infoTable.add(new Label("Estrellas", ls));
+		infoTable.row();
+		infoTable.add(new Label("10e/hora", ls)).padRight(100f);
+		infoTable.add(new RatingBar());
 		
 		Image line = new Image(_lineTexture);
 		line.setSize(getWidth(), 5f);
-		
-		//personTable.setDebug(true);
-		
-		//
-		
+				
 		personTable.add(new Image(p.getPicture())).width(150f).height(150f).pad(25f);
 		personTable.add(infoTable).expand();
 		personTable.row().colspan(2).fillX();
 		personTable.add(line).height(5f);
-		
+				
 		_list.row();
 		_list.add(personTable).size(getWidth(), 200f);
 			
