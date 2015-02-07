@@ -19,6 +19,7 @@ import es.local.experts.categories.Category.OptionType;
 import es.local.experts.ui.CategorySelector;
 import es.local.experts.ui.CategorySelector.CategorySelectorStyle;
 import es.local.experts.ui.ListView;
+import es.local.experts.ui.PersonListener;
 import es.local.experts.utils.Utils;
 
 public class MainScreen extends ScreenAdapter {
@@ -55,7 +56,7 @@ public class MainScreen extends ScreenAdapter {
 		
 		
 		// Categories
-		Category fisio = new Category("Fisiotherapy");
+		Category fisio = new Category("Physiotherapist");
 		fisio.loadField("Session time", OptionType.value, 1);
 		fisio.loadField("Session price", OptionType.value, 20);
 		fisio.loadField("Home visit", OptionType.checkBox, true);
@@ -64,7 +65,14 @@ public class MainScreen extends ScreenAdapter {
 		teacher.loadField("Session price", OptionType.value, 20);
 		teacher.loadField("Home visit", OptionType.checkBox, true);
 		
-		_categorySelector = new CategorySelector(fisio, Utils.APP_WIDTH, 200f, 75f, 75f, 150f, css);
+		try {
+			_categorySelector = new CategorySelector(fisio, Utils.APP_WIDTH, 200f, 75f, 75f, 150f, css);
+		}
+		catch(NullPointerException e) {
+			// Should show error message and exit
+			Gdx.app.exit();
+		}
+		
 		_categorySelector.addCategory(teacher);
 		_categorySelector.setPosition(0, Utils.APP_HEIGHT - _categorySelector.getHeight());
 		
@@ -105,15 +113,24 @@ public class MainScreen extends ScreenAdapter {
 		_listView = new ListView(Utils.APP_WIDTH, Utils.APP_HEIGHT - _categorySelector.getHeight() - orderBarHeight, orderBarHeight, lvs);
 		_listView.setBackground(new TextureRegionDrawable(new TextureRegion(_listViewBackground)));
 		
-		_categorySelector.setBackgroundTable(_listView);
+		_categorySelector.setItemList(_listView);
 		
 		
 		_avatar = new Texture("avatar.png");
 		
-		Person p1 = new Person(0, _avatar, "Alberto Cejas Sánchez", 3);
-		Person p2 = new Person(1, _avatar, "Alberto Cejas Sánchez", 3);
+		Person p1 = new Person(0, _avatar, "Fulanito De Tal", 3.2f);
+		Person p2 = new Person(1, _avatar, "Alberto Cejas Sánchez", 2.3f);
 		_listView.addPerson(p1);
 		_listView.addPerson(p2);
+		
+		_listView.setPersonListener( new PersonListener() {
+			
+			public void clicked(Person p) {
+				// Go to person list
+				System.out.println("Person: " + p.getName());
+			}
+			
+		});
 		
 		// Build the stage ---------------------------
 		

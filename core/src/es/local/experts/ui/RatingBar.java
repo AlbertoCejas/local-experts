@@ -8,16 +8,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class RatingBar extends Table {
 
-	private float _value = 2.5f;
+	private float _value = 0f;
 	private int _numOfStars = 5;
-	private Texture _holder, _star;
+	private Texture _holder = new Texture("star_holder.png");
+	private Texture _star = new Texture("star.png");
 	private float _starWidth = 75f;
 	
 	public RatingBar() {
 		super();
 		
-		_holder = new Texture("star_holder.png");
-		_star = new Texture("star.png");
 		setSize(_starWidth*_numOfStars, _starWidth);
 		
 		buildWidget();
@@ -27,6 +26,17 @@ public class RatingBar extends Table {
 	
 	public RatingBar(int numOfStars) {
 		_numOfStars = numOfStars;
+		setSize(_starWidth*_numOfStars, _starWidth);
+		
+		buildWidget();
+		
+		invalidateHierarchy();
+	}
+	
+	public RatingBar(int numOfStars, float value) {
+		_numOfStars = numOfStars;
+		_value = value;
+		
 		setSize(_starWidth*_numOfStars, _starWidth);
 		
 		buildWidget();

@@ -19,7 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldClickListener;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldFilter;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
@@ -28,9 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.reflect.ClassReflection;
 
 import es.local.experts.categories.Category;
 import es.local.experts.categories.Category.Field;
@@ -44,14 +41,15 @@ public class CategorySelector extends Table implements Disposable {
 	private CategorySelectorStyle _style;
 	private Button _rightButton, _leftButton, _backgroundButton;
 	private Label _label;
+	private CategorySelectorController _controller;
 
-	private boolean _expanded = false, _expanding = false, _sliding = false;
+	private boolean _expanded = false, _expanding = false, _sliding = false, _synchronizing = false;
 
 	private float _minHeight, _maxHeight, _rowHeight, _rowPadding;
 
 	private Table _textSlider;
 	private Table _expandablePanel;
-	private Table _backgroundTable;
+	private ListView _backgroundTable;
 
 	private Label.LabelStyle sls;
 	private Texture _textFieldBackground, _textFieldCursor;
@@ -114,6 +112,12 @@ public class CategorySelector extends Table implements Disposable {
 		_backgroundButton = new Button(bbs);
 		_backgroundButton.setSize(width, minHeight);
 
+		// -- Panel definition ---------------------------
+		Button.ButtonStyle pbs = new Button.ButtonStyle();
+		pbs.up = css._panelBackground;
+		_expandablePanel = new Button(pbs);
+		_expandablePanel.setHeight(panelSize);
+
 		// -- Text slider --------------------------------
 		_textSlider = new Table();
 		_textSlider.setHeight(minHeight);
@@ -139,17 +143,45 @@ public class CategorySelector extends Table implements Disposable {
 
 		// Listeners ----------------------------------
 
+		try {
+			_controller = new CategorySelectorController(this);
+		}
+		catch (NullPointerException e) {
+			throw e;
+		}
+		
 		_leftButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y) {
-				if(!_sliding)
+				if(!_sliding && !_synchronizing) {
+					hideBackgroundTable();
+					
+					// ask controller to make the request
+					if(--_currentCategoryIndex == -1)
+						_currentCategoryIndex = _model.size-1;
+					
+					_controller.updateExperts(_model.get(_currentCategoryIndex).getName());
+					
 					prevCategory();
+				}
 			}
 		});
 
 		_rightButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y) {
-				if(!_sliding)
+				
+				if(!_sliding && !_synchronizing) {
+					
+					hideBackgroundTable();
+					
+					// ask controller to make the request
+					if(--_currentCategoryIndex == -1)
+						_currentCategoryIndex = _model.size-1;
+					
+					_controller.updateExperts(_model.get(_currentCategoryIndex).getName());
+					
 					nextCategory();
+				}
+				
 			}
 		});
 
@@ -197,6 +229,10 @@ public class CategorySelector extends Table implements Disposable {
 
 	}
 
+	public void clearItems() {
+		_backgroundTable.reset();
+	}
+	
 	public void expand() {
 
 		if(!_expanding) {
@@ -400,9 +436,6 @@ public class CategorySelector extends Table implements Disposable {
 				if(_expanded)
 					shrink();
 
-				if(--_currentCategoryIndex == -1)
-					_currentCategoryIndex = _model.size-1;
-
 				int numOfFields = _model.get(_currentCategoryIndex).getFields().size;
 				_maxHeight = _minHeight + (numOfFields * _rowHeight + (numOfFields+1) * _rowPadding);
 
@@ -422,15 +455,18 @@ public class CategorySelector extends Table implements Disposable {
 	}
 
 	public void addCategory(Category category) {
-		String categoryName = ClassReflection.getSimpleName(category.getClass());
 		_model.add(category);
 	}
 
-	public void setBackgroundTable(Table table) {
+	public ListView getItemList() {
+		return _backgroundTable;
+	}
+	
+	public void setItemList(ListView table) {
 		_backgroundTable = table;
 	}
 
-	private void hideBackgroundTable() {
+	public void hideBackgroundTable() {
 		if(_backgroundTable != null) {
 			AlphaAction action = new AlphaAction();
 			action.setAlpha(.5f);
@@ -440,7 +476,7 @@ public class CategorySelector extends Table implements Disposable {
 		}
 	}
 
-	private void showBackgroundTable() {
+	public void showBackgroundTable() {
 		if(_backgroundTable != null) {
 			AlphaAction action = new AlphaAction();
 			action.setAlpha(1f);
@@ -471,6 +507,9 @@ public class CategorySelector extends Table implements Disposable {
 		invalidateHierarchy();
 	}
 
+	public void setSynchronizing(boolean isSynchro) {
+		_synchronizing = isSynchro;
+	}
 
 	static public class CategorySelectorStyle {
 
@@ -495,6 +534,5 @@ public class CategorySelector extends Table implements Disposable {
 		}
 
 	}
-
 
 }
